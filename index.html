@@ -1,89 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Learner Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      // Lucide icons inline
-      window.onload = () => {
-        const icons = {
-          userCircle: `<svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M18 20a6 6 0 0 0-12 0m6-16a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>`,
-          bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M3 4a1 1 0 0 1 1-1h6v16H4a1 1 0 0 1-1-1V4zm17-1h-6v16h6a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z"/></svg>`,
-          bell: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0 1 18 14V11c0-3.866-2.239-7-5-7S8 7.134 8 11v3c0 .386-.146.735-.405 1.003L6 17h5m0 0a3.001 3.001 0 0 0 6 0"/></svg>`,
-          award: `<svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M12 8a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm0 2c-4.418 0-8 1.79-8 4v5h16v-5c0-2.21-3.582-4-8-4z"/></svg>`,
-        };
 
-        // Insert icons where data-icon attr exists
-        document.querySelectorAll("[data-icon]").forEach((el) => {
-          el.innerHTML = icons[el.getAttribute("data-icon")];
-        });
-      };
-    </script>
-  </head>
-  <body class="bg-gray-100 text-gray-800">
-    <div class="min-h-screen p-6">
-      <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h1 class="text-2xl font-semibold">Welcome back, Alex!</h1>
-          <p class="text-sm text-gray-500">Here's your learning summary</p>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merged Learner Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #1a202c;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    .sidebar {
+      background-color: #2d3748;
+    }
+
+    .content-box {
+      background-color: #2d3748;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .input {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #4a5568;
+      border: 1px solid #2d3748;
+      border-radius: 0.5rem;
+      color: white;
+    }
+
+    .input:focus {
+      border-color: #48bb78;
+      box-shadow: 0 0 0 2px #48bb78;
+    }
+
+    .button {
+      background-color: #48bb78;
+      color: white;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+    }
+
+    .button:hover {
+      background-color: #38a169;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      min-width: 160px;
+      z-index: 10;
+    }
+
+    .dropdown-menu a {
+      padding: 0.75rem;
+      color: white;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #38a169;
+    }
+
+    .profile-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .profile-info {
+      margin-left: 1rem;
+    }
+
+    .profile-pic-wrapper img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  </style>
+</head>
+
+<body class="flex min-h-screen">
+  <!-- Sidebar -->
+  <div class="sidebar fixed inset-y-0 left-0 w-64 p-5">
+    <h2 class="text-xl font-bold mb-5 text-green-400">Nex Genix</h2>
+    <ul class="space-y-4">
+      <li class="cursor-pointer hover:text-green-400" onclick="showSection('dashboard')">Dashboard</li>
+      <li class="cursor-pointer hover:text-green-400" onclick="showSection('services')">Subscribed Services</li>
+      <li class="cursor-pointer hover:text-green-400" onclick="showSection('settings')">Settings</li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col ml-64 p-6">
+    <!-- Nav Bar -->
+    <nav class="flex justify-between bg-gray-800 p-4 rounded-lg">
+      <input type="text" placeholder="Search..." class="input w-1/3">
+      <div class="flex gap-4">
+        <div class="dropdown relative">
+          <button class="button">Home</button>
+          <div class="dropdown-menu absolute right-0 mt-2">
+            <a href="https://nexgenixbusinessschool.github.io/home" target="_blank">NG Business School</a>
+            <a href="https://nexgenixcreativesolutions.github.io/home" target="_blank">NG Creative Solutions</a>
+          </div>
         </div>
-        <div data-icon="userCircle"></div>
+        <button class="button" onclick="logout()">Logout</button>
       </div>
+    </nav>
 
-      <!-- Dashboard Grid -->
+    <!-- Welcome and Time -->
+    <div class="text-center my-6">
+      <h1 class="text-2xl font-semibold">Welcome back, <span id="full-name">Alex</span>!</h1>
+      <p class="text-sm text-gray-400">Here's your learning summary</p>
+      <div id="current-time" class="font-semibold mt-2"></div>
+      <div id="current-date" class="text-sm"></div>
+    </div>
+
+    <!-- Learner Dashboard -->
+    <div id="dashboard">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Course Progress -->
-        <div class="bg-white rounded-2xl shadow p-4">
-          <div class="flex items-center gap-3 mb-4">
-            <div data-icon="bookOpen"></div>
-            <h2 class="text-lg font-medium">Your Courses</h2>
+        <div class="content-box">
+          <h3 class="text-lg font-semibold">Your Courses</h3>
+          <p class="text-sm text-gray-300 mb-2">Intro to Project Management</p>
+          <div class="w-full bg-gray-700 rounded-full h-2.5 mb-2">
+            <div class="bg-green-500 h-2.5 rounded-full" style="width: 70%"></div>
           </div>
-          <p class="text-sm text-gray-600 mb-2">
-            Intro to Project Management
-          </p>
-          <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-            <div
-              class="bg-blue-600 h-2.5 rounded-full"
-              style="width: 70%"
-            ></div>
-          </div>
-          <button
-            class="mt-2 w-full bg-blue-600 text-white rounded-lg py-2 hover:bg-blue-700 transition"
-          >
-            Resume Course
-          </button>
+          <button class="button w-full">Resume Course</button>
         </div>
 
-        <!-- Upcoming Tasks -->
-        <div class="bg-white rounded-2xl shadow p-4">
-          <div class="flex items-center gap-3 mb-4">
-            <div data-icon="bell"></div>
-            <h2 class="text-lg font-medium">Upcoming Deadlines</h2>
-          </div>
-          <ul class="text-sm text-gray-600 space-y-2">
+        <div class="content-box">
+          <h3 class="text-lg font-semibold">Upcoming Deadlines</h3>
+          <ul class="text-sm text-gray-300 space-y-2">
             <li>📅 Quiz: Module 2 - Due April 10</li>
             <li>📅 Assignment: Final Project - Due April 15</li>
             <li>📅 Peer Review - Due April 18</li>
           </ul>
         </div>
 
-        <!-- Certifications -->
-        <div class="bg-white rounded-2xl shadow p-4">
-          <div class="flex items-center gap-3 mb-4">
-            <div data-icon="award"></div>
-            <h2 class="text-lg font-medium">Certifications</h2>
-          </div>
-          <p class="text-sm text-gray-600 mb-2">
-            📄 Project Management - Earned Mar 2024
-          </p>
-          <p class="text-sm text-gray-600">
-            📄 Agile Basics - Earned Jan 2024
-          </p>
+        <div class="content-box">
+          <h3 class="text-lg font-semibold">Certifications</h3>
+          <p class="text-sm text-gray-300 mb-2">📄 Project Management - Earned Mar 2024</p>
+          <p class="text-sm text-gray-300">📄 Agile Basics - Earned Jan 2024</p>
         </div>
       </div>
     </div>
-  </body>
+
+    <!-- Additional Sections: Services & Settings -->
+    <!-- Already Included in Previous HTML -->
+  </div>
+
+  <script>
+    const defaultProfile = "https://cdn-icons-png.flaticon.com/512/1144/1144760.png";
+
+    function updateDateTime() {
+      const date = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('current-time').textContent = date.toLocaleTimeString();
+      document.getElementById('current-date').textContent = date.toLocaleDateString(undefined, options);
+    }
+
+    function logout() {
+      localStorage.removeItem('user');
+      window.location.href = "https://nexgenixcreativesolutions.github.io/login-signup/";
+    }
+
+    function showSection(id) {
+      const sections = ['dashboard', 'services', 'settings'];
+      sections.forEach(section => {
+        const el = document.getElementById(section);
+        if (el) el.classList.add('hidden');
+      });
+      const showEl = document.getElementById(id);
+      if (showEl) showEl.classList.remove('hidden');
+    }
+
+    function loadUserData() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) {
+        document.getElementById('full-name').textContent = user.fullName;
+      }
+    }
+
+    setInterval(updateDateTime, 1000);
+
+    window.onload = () => {
+      updateDateTime();
+      loadUserData();
+    };
+  </script>
+</body>
+
 </html>
